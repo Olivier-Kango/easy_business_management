@@ -1,12 +1,14 @@
+# frozen_string_literal: true
+
 class User < ApplicationRecord
   CONFIRMATION_TOKEN_EXPIRATION = 10.minutes
-  MAILER_FROM_EMAIL = "no-reply@example.com"
+  MAILER_FROM_EMAIL = 'no-reply@example.com'
 
   has_secure_password
 
   before_save :downcase_email
 
-  validates :email, format: {with: URI::MailTo::EMAIL_REGEXP}, presence: true, uniqueness: true
+  validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }, presence: true, uniqueness: true
 
   def confirm!
     update_columns(confirmed_at: Time.current)
