@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   CONFIRMATION_TOKEN_EXPIRATION = 10.minutes
+  MAILER_FROM_EMAIL = "no-reply@example.com"
 
   has_secure_password
 
@@ -17,6 +18,11 @@ class User < ApplicationRecord
 
   def unconfirmed?
     !confirmed?
+  end
+
+  def send_confirmation_email!
+    confirmation_token = generate_confirmation_token
+    UserMailer.confirmation(self, confirmation_token).deliver_now
   end
 
   private
