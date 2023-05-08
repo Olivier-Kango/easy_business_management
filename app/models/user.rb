@@ -7,6 +7,8 @@ class User < ApplicationRecord
 
   has_secure_password
 
+  has_secure_token :remember_token
+
   before_save :downcase_email
 
   before_save :downcase_unconfirmed_email
