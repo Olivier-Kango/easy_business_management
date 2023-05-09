@@ -26,7 +26,6 @@ class ConfirmationsController < ApplicationController
       redirect_to new_confirmation_path, alert: 'Invalid token.'
     end
 
-
   end
 
   def new
