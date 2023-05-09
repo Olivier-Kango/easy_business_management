@@ -9,6 +9,8 @@ class User < ApplicationRecord
 
   has_secure_token :remember_token
 
+  has_many :active_sessions, dependent: :destroy
+
   before_save :downcase_email
 
   before_save :downcase_unconfirmed_email
