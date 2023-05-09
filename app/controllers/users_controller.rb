@@ -26,10 +26,12 @@ class UsersController < ApplicationController
 
   def edit
     @user = current_user
+    @active_sessions = @user.active_sessions.order(created_at: :desc)
   end
 
   def update
     @user = current_user
+    @active_sessions = @user.active_sessions.order(created_at: :desc)
     if @user.authenticate(params[:user][:current_password])
       if @user.update(update_user_params)
         if params[:user][:unconfirmed_email].present?
