@@ -18,6 +18,7 @@ module Authentication
   end
 
   def authenticate_user!
+    store_location
     redirect_to login_path, alert: "You need to login to access that page." unless user_signed_in?
   end
 
@@ -46,6 +47,10 @@ module Authentication
 
   def user_signed_in?
     Current.user.present?
+  end
+
+  def store_location
+    session[:user_return_to] = request.original_url if request.get? && request.local?
   end
 
 end
