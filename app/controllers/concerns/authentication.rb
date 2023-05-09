@@ -24,11 +24,14 @@ module Authentication
 
   def login(user)
     reset_session
-    session[:current_user_id] = user.id
+    active_session = user.active_sessions.create!
+    session[:current_active_session_id] = active_session.id
   end
 
   def logout
+    active_session = ActiveSession.find_by(id: session[:current_active_session_id])
     reset_session
+    active_session.destroy! if active_session.present?
   end
 
   def redirect_if_authenticated
@@ -38,8 +41,8 @@ module Authentication
   private
 
   def current_user
-    Current.user ||= if session[:current_user_id].present?
-      User.find_by(id: session[:current_user_id])
+    Current.user = if session[:current_active_session_id].present?
+      ActiveSession.find_by(id: session[:current_active_session_id]).user
     elsif cookies.permanent.encrypted[:remember_token].present?
       User.find_by(remember_token: cookies.permanent.encrypted[:remember_token])
     end
