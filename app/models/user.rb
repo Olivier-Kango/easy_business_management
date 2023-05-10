@@ -4,6 +4,7 @@ class User < ApplicationRecord
   CONFIRMATION_TOKEN_EXPIRATION = 10.minutes
   MAILER_FROM_EMAIL = 'no-reply@example.com'
   attr_accessor :current_password
+  attr_accessor :remember_token
 
   has_secure_password
 
@@ -19,8 +20,16 @@ class User < ApplicationRecord
 
   validates :unconfirmed_email, format: {with: URI::MailTo::EMAIL_REGEXP, allow_blank: true}
 
-  def confirm!
-    update_columns(confirmed_at: Time.current)
+  def remember_digest
+    BCrypt::Password.new(remember_token) if remember_token.present?
+  end
+
+  def remember_token?
+    remember_digest.present?
+  end
+
+  def generate_confirmation_token
+    SecureRandom.urlsafe_base64
   end
 
   def confirm!
